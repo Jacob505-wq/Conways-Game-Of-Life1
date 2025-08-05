@@ -11,48 +11,105 @@ import java.awt.event.*; //for GUI
 import java.awt.geom.*; //geometry for lines and shapes
 import javax.swing.JButton;//for buttons
 
-public class ConwaysGameOfLife1 extends JFrame implements ActionListener,MouseListener
+public class ConwaysGameOfLife2 extends JFrame implements ActionListener,MouseListener
 {
-
-    int Rows = 50;
-    int Cols = 50;
-    int cellSize = 15;
+    int windowX = 1000;
+    int windowY = 800;
+    int xMargin = 20;
+    int yMargin =40;
+   
+   
+    int Rows = 30;
+    int Cols = 30;
+    int cellSize = 25;
     int[][] grid = new int[Rows][Cols];
    
     int cellX;
     int cellY;
     Canvas myGraphic;
-
+    JButton quitButton;
+    JButton clearButton;
+    JButton advanceTurn;
     /**
      * Constructor for objects of class ConwaysGameOfLife
      */
-    public ConwaysGameOfLife1()
+    public ConwaysGameOfLife2()
     {
+        this.setLayout(null);
+        quitButton = new JButton();
+        quitButton.setText("Quit");
+        quitButton.setBounds (830,30,100,50);
+        quitButton.setFocusable(false);
+        quitButton.addActionListener(this);
+        this.add(quitButton);
+       
+        clearButton = new JButton();
+        clearButton.setText("Clear");
+        clearButton.setBounds (830,130,100,50);
+        clearButton.setFocusable(false);
+        clearButton.addActionListener(this);
+        this.add(clearButton);
+
+        advanceTurn = new JButton();
+        advanceTurn.setText("Advance Turn");
+        advanceTurn.setBounds (800,230,150,50);
+        advanceTurn.setFocusable(false);
+        advanceTurn.addActionListener(this);
+        this.add(advanceTurn);
+       
         //set title of the window
         setTitle("Conways Game Of Life");
-       
         //window dimentions when open.
-        this.getContentPane().setPreferredSize(new Dimension(1000,800));
-       
+        this.getContentPane().setPreferredSize(new Dimension(windowX,windowY));
         //says what happens when we close the window.
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
    
        
-       
-       
         JPanel panel = new JPanel(); // panel for canvas
-        panel.setPreferredSize(new Dimension(1000,800));
+        panel.setPreferredSize(new Dimension(windowX,windowY));
         myGraphic = new Canvas();
         panel.add(myGraphic);
-
         addMouseListener(this); // listen for the mouse
-
         //make the window visible
         this.setResizable(false); //make user unable to change window size
         this.pack();
         this.toFront();
         this.setVisible(true);
 
+    }
+   
+    public int countNeighbours(int R, int C){
+        int Neighbours = 0;
+       
+        if (grid[R+1][C] == 1) {
+            Neighbours++ ;
+        }
+        if (grid[R+1][C+1] == 1){
+            Neighbours++ ;
+        }
+        if (grid[R][C+1] == 1){
+            Neighbours++ ;
+        }
+        if (grid[R-1][C+1] == 1){
+            Neighbours++ ;
+        }
+        if (grid[R-1][C] == 1){
+            Neighbours++ ;
+        }
+        if (grid[R-1][C-1] == 1){
+            Neighbours++ ;
+        }
+        if (grid[R][C-1] == 1){
+            Neighbours++ ;
+        }
+        if (grid[R+1][C-1] == 1){
+            Neighbours++ ;
+        }
+        //check all surounding cells
+       
+        System.out.println("Neighbours= "+Neighbours);
+           
+        return Neighbours;
     }
    
     public void paint (Graphics g) {
@@ -64,7 +121,7 @@ public class ConwaysGameOfLife1 extends JFrame implements ActionListener,MouseLi
        
         // Draw grid background
         g.setColor(Color.WHITE);
-        g.fillRect(0, 0, Cols * cellSize, Rows * cellSize);
+        g.fillRect(xMargin, yMargin, Cols * cellSize, Rows * cellSize);
 
        
         // Draw cells
@@ -72,10 +129,10 @@ public class ConwaysGameOfLife1 extends JFrame implements ActionListener,MouseLi
             for (int C = 0; C < Cols; C++) {
                 if (grid[R][C] == 1) {
                     g.setColor(Color.BLACK);
-                    g.fillRect(C * cellSize, R * cellSize, cellSize, cellSize);
+                    g.fillRect((C * cellSize)+xMargin, (R * cellSize)+yMargin, cellSize, cellSize);
                 }
                 g.setColor(Color.GRAY);
-                g.drawRect(C * cellSize, R * cellSize, cellSize, cellSize);
+                g.drawRect((C * cellSize)+xMargin, (R * cellSize)+yMargin, cellSize, cellSize);
             }
         }
        
@@ -84,20 +141,31 @@ public class ConwaysGameOfLife1 extends JFrame implements ActionListener,MouseLi
    
    
    
-   
+    //actions to events
         public void actionPerformed(ActionEvent e){
         String cmd=e.getActionCommand();
        
-        System.out.println(cmd);
+        System.out.println(cmd);        
+
+        if (e.getSource()==quitButton){
+            System.exit(0);
+        } //Quit program
        
-        switch (cmd) {
-            case "Quit" :System.exit(0);
-                        break;
-            case "option1" :System.out.println("switchOption1");
-                        break;    
-            default: System.out.println("Invalid Input");
-                        break;
+        if (e.getSource()==clearButton){
+            for (int R = 0; R < Rows; R++) {
+                for (int C = 0; C < Cols; C++) {
+                    if (grid[R][C] == 1){
+                        grid[R][C] = 0;
+                    }
+                }
+            }
+            repaint();
+        } //Clear grid
+       
+            if (e.getSource()==advanceTurn){
+            System.out.println("advance a turn");
         }
+       
     }
    
     public void mouseExited(MouseEvent e) {System.out.println("exit");}
@@ -109,9 +177,12 @@ public class ConwaysGameOfLife1 extends JFrame implements ActionListener,MouseLi
         int mouseY=e.getY();
         System.out.println("click "+mouseX+","+mouseY);
        
+        int mouseXGrid = mouseX -xMargin;  //mouse position against the grid
+        int mouseYGrid = mouseY -yMargin;  //mouse position against the grid
+       
         //finds out what cell was clicked on
-        cellY = mouseX / cellSize;
-        cellX = mouseY / cellSize;
+        cellY = mouseXGrid / cellSize;
+        cellX = mouseYGrid / cellSize;
         System.out.println("clicked cell= "+cellX+","+cellY);
 
         //finds out if the cell is already alive or dead, and then switches its state.
@@ -121,7 +192,11 @@ public class ConwaysGameOfLife1 extends JFrame implements ActionListener,MouseLi
         else if (grid[cellX][cellY] == 1){
             grid[cellX][cellY] = 0;
         }
+       
+       
         repaint();//refreshes the screen
+       
+        countNeighbours(cellX,cellY);
     }
    
    
