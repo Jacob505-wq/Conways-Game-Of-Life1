@@ -11,7 +11,7 @@ import java.awt.event.*; //for GUI
 import java.awt.geom.*; //geometry for lines and shapes
 import javax.swing.JButton;//for buttons
 
-public class ConwaysGameOfLife2 extends JFrame implements ActionListener,MouseListener
+public class ConwaysGameOfLife3 extends JFrame implements ActionListener,MouseListener
 {
     int windowX = 1000;
     int windowY = 800;
@@ -33,7 +33,7 @@ public class ConwaysGameOfLife2 extends JFrame implements ActionListener,MouseLi
     /**
      * Constructor for objects of class ConwaysGameOfLife
      */
-    public ConwaysGameOfLife2()
+    public ConwaysGameOfLife3()
     {
         this.setLayout(null);
         quitButton = new JButton();
@@ -80,36 +80,145 @@ public class ConwaysGameOfLife2 extends JFrame implements ActionListener,MouseLi
    
     public int countNeighbours(int R, int C){
         int Neighbours = 0;
+        //top and bottom cells and the corners of them
+        if (R == 0){
+                if (grid[R+1][C] == 1) {
+                Neighbours++ ;
+            }
+            if (C>0){
+                if (grid[R+1][C-1] == 1){
+                    Neighbours++ ;
+                }
+            }
+            if (C < (Cols-1) && C != (Cols-1)){
+                if (grid[R+1][C+1] == 1){
+                    Neighbours++ ;
+                }
+            }
+        }
+        if (R == (Rows-1)){
+                if (grid[R-1][C] == 1){
+                Neighbours++ ;
+            }
+            if (C>0){
+                if (grid[R-1][C-1] == 1){
+                    Neighbours++ ;
+                }
+            }
+            if (C < (Cols-1)){
+                if (grid[R-1][C+1] == 1){
+                    Neighbours++ ;
+                }
+            }
+        }
        
-        if (grid[R+1][C] == 1) {
-            Neighbours++ ;
+        //far left and far right cells
+        if (C == 0){
+            if (grid[R][C+1] == 1){
+                Neighbours++ ;
+            }
+            if (R > 0){
+                if (grid[R-1][C+1] == 1){
+                    Neighbours++ ;
+                }
+            }
+            if (R < (Rows-1)){
+                if (grid[R+1][C+1] == 1){
+                    Neighbours++ ;
+                }
+                }
         }
-        if (grid[R+1][C+1] == 1){
-            Neighbours++ ;
+        if (C == (Cols-1)){
+               if (grid[R][C-1] == 1){
+               Neighbours++ ;
+           }
+           if (R>0){
+               if (grid[R-1][C-1] == 1){
+                    Neighbours++ ;
+               }
+           }
+           if (R < (Rows-1)){
+               if (grid[R+1][C-1] == 1){
+                   Neighbours++ ;
+               }
+           }
         }
-        if (grid[R][C+1] == 1){
-            Neighbours++ ;
+       
+       
+       
+       
+
+        //left and right cells when in grid
+        if (C > 0 && C < (Cols-1)){
+                if (grid[R][C-1] == 1){
+                Neighbours++ ;
+            }
+                if (grid[R][C+1] == 1){
+                Neighbours++ ;
+            }
         }
-        if (grid[R-1][C+1] == 1){
-            Neighbours++ ;
+        //up and down cells when in grid
+        if (R > 0 && R < (Rows-1)){
+                if (grid[R-1][C] == 1){
+                Neighbours++ ;
+            }
+                if (grid[R+1][C] == 1){
+                Neighbours++ ;
+            }
         }
-        if (grid[R-1][C] == 1){
-            Neighbours++ ;
+       
+        //corners when in grid
+        if ((R > 0 && R < (Rows-1)) && (C > 0 && C < (Cols-1))){
+            if (grid[R+1][C+1] == 1){
+                Neighbours++ ;
+            }
+            if (grid[R-1][C+1] == 1){
+                Neighbours++ ;
+            }
+            if (grid[R-1][C-1] == 1){
+                Neighbours++ ;
+            }
+            if (grid[R+1][C-1] == 1){
+                Neighbours++ ;
+            }
         }
-        if (grid[R-1][C-1] == 1){
-            Neighbours++ ;
-        }
-        if (grid[R][C-1] == 1){
-            Neighbours++ ;
-        }
-        if (grid[R+1][C-1] == 1){
-            Neighbours++ ;
-        }
+       
+       
+           
+   
+       
+       
+        // if (grid[R+1][C] == 1) {
+            // Neighbours++ ;
+        // }
+        // if (grid[R+1][C+1] == 1){
+            // Neighbours++ ;
+        // }
+        // if (grid[R][C+1] == 1){
+            // Neighbours++ ;
+        // }
+        // if (grid[R-1][C+1] == 1){
+            // Neighbours++ ;
+        // }
+        // if (grid[R-1][C] == 1){
+            // Neighbours++ ;
+        // }
+        // if (grid[R-1][C-1] == 1){
+            // Neighbours++ ;
+        // }
+        // if (grid[R][C-1] == 1){
+            // Neighbours++ ;
+        // }
+        // if (grid[R+1][C-1] == 1){
+            // Neighbours++ ;
+        // }
         //check all surounding cells
        
         System.out.println("Neighbours= "+Neighbours);
            
         return Neighbours;
+       
+        //need to fix what happens at the boundry of array because it is invalid
     }
    
     public void paint (Graphics g) {
