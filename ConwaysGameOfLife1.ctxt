@@ -1,7 +1,7 @@
 #BlueJ class context
-comment0.target=ConwaysGameOfLife6
+comment0.target=ConwaysGameOfLife7
 comment1.params=
-comment1.target=ConwaysGameOfLife6()
+comment1.target=ConwaysGameOfLife7()
 comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ ConwaysGameOfLife\r\n
 comment10.params=rounds
 comment10.target=void\ autoTurns(int)

@@ -10,25 +10,30 @@ import java.awt.*;       //for GUI
 import java.awt.event.*; //for GUI
 import java.awt.geom.*; //geometry for lines and shapes
 import javax.swing.JButton;//for buttons
-import javax.swing.Timer; //timer for a delay between animations?
-public class ConwaysGameOfLife6 extends JFrame implements ActionListener,MouseListener
+import javax.swing.Timer; //timer for a delay
+public class ConwaysGameOfLife7 extends JFrame implements ActionListener,MouseListener
 {
-    int windowX = 1000;
+    int windowX = 1000;  //size of the window
     int windowY = 800;
-    int xMargin = 20;
-    int yMargin =40;
+    int xMargin = 20;  //margin of the grid from the top lef of the window
+    int yMargin =40;  
+   
+    //how many rows and columns there are and their size
+    int Rows = 50;
+    int Cols = 50;
+    int cellSize = 15;
    
    
-    int Rows = 30;
-    int Cols = 30;
-    int cellSize = 25;
-    int[][] grid = new int[Rows][Cols];
-    int[][] Neighbours = new int [Rows][Cols];
+    int[][] grid = new int[Rows][Cols];        //2d array to hold the vaule of each cell
+    int[][] Neighbours = new int [Rows][Cols]; //2d array to hold the value of the sourounding cells
    
-    int advanceTurns = 0;
+    int advanceTurns = 10;
    
+    //used when finding the cell clicked instead of the x and y cordinate
     int cellX;
     int cellY;
+   
+    //creating all the java buttons,canvas and timer
     Canvas myGraphic;
     JButton quitButton;
     JButton clearButton;
@@ -41,9 +46,9 @@ public class ConwaysGameOfLife6 extends JFrame implements ActionListener,MouseLi
     /**
      * Constructor for objects of class ConwaysGameOfLife
      */
-    public ConwaysGameOfLife6()
+    public ConwaysGameOfLife7()
     {
-        this.setLayout(null);
+        this.setLayout(null);                      
         quitButton = new JButton();
         quitButton.setText("Quit");
         quitButton.setBounds (830,30,100,50);
@@ -120,10 +125,9 @@ public class ConwaysGameOfLife6 extends JFrame implements ActionListener,MouseLi
         for (int R = 0; R < Rows; R++) {
             for (int C = 0; C < Cols; C++) {
                 Neighbours[R][C] = countNeighbours(R,C);
-               
             }
         }
-       
+
         for (int R = 0; R < Rows; R++) {
             for (int C = 0; C < Cols; C++) {
                 if (grid[R][C] == 1){
@@ -142,7 +146,7 @@ public class ConwaysGameOfLife6 extends JFrame implements ActionListener,MouseLi
                 }
             }
         }
-        //done ini two loops to prevent it changing while still going through the grid
+        //done in two loops to prevent it changing while still going through the grid
         repaint();
     }
    
@@ -257,9 +261,8 @@ public class ConwaysGameOfLife6 extends JFrame implements ActionListener,MouseLi
             timer.stop();
         }
        
-       
         final int[] count = {0};  // counter wrapped in array to modify inside inner class
-
+       
         timer = new Timer(300, new ActionListener() {
            
             @Override
@@ -379,12 +382,9 @@ public class ConwaysGameOfLife6 extends JFrame implements ActionListener,MouseLi
                 Neighbours++ ;
             }
         }
-       
-        System.out.println("Neighbours= "+Neighbours);
            
         return Neighbours;
        
-        //need to fix what happens at the boundry of array because it is invalid
     }
    
 
