@@ -11,7 +11,7 @@ import java.awt.event.*; //for GUI
 import java.awt.geom.*; //geometry for lines and shapes
 import javax.swing.JButton;//for buttons
 
-public class ConwaysGameOfLife4 extends JFrame implements ActionListener,MouseListener
+public class ConwaysGameOfLife5 extends JFrame implements ActionListener,MouseListener
 {
     int windowX = 1000;
     int windowY = 800;
@@ -23,7 +23,6 @@ public class ConwaysGameOfLife4 extends JFrame implements ActionListener,MouseLi
     int Cols = 30;
     int cellSize = 25;
     int[][] grid = new int[Rows][Cols];
-    int[][] Neighbours = new int [Rows][Cols];
    
     int cellX;
     int cellY;
@@ -34,7 +33,7 @@ public class ConwaysGameOfLife4 extends JFrame implements ActionListener,MouseLi
     /**
      * Constructor for objects of class ConwaysGameOfLife
      */
-    public ConwaysGameOfLife4()
+    public ConwaysGameOfLife5()
     {
         this.setLayout(null);
         quitButton = new JButton();
@@ -81,144 +80,37 @@ public class ConwaysGameOfLife4 extends JFrame implements ActionListener,MouseLi
    
     public int countNeighbours(int R, int C){
         int Neighbours = 0;
-        //top and bottom cells and the corners of them
-        if (R == 0){
-                if (grid[R+1][C] == 1) {
-                Neighbours++ ;
-            }
-            if (C>0 && C < (Cols-1)){
-                if (grid[R+1][C-1] == 1){
-                    Neighbours++ ;
-                }
-            }
-            if (C < (Cols-1) && C>0){
-                if (grid[R+1][C+1] == 1){
-                    Neighbours++ ;
-                }
-            }
-        }
-        if (R == (Rows-1)){
-                if (grid[R-1][C] == 1){
-                Neighbours++ ;
-            }
-            if (C>0 && C < (Cols-1)){
-                if (grid[R-1][C-1] == 1){
-                    Neighbours++ ;
-                }
-            }
-            if (C < (Cols-1) && C>0){
-                if (grid[R-1][C+1] == 1){
-                    Neighbours++ ;
-                }
-            }
-        }
        
-        //far left and far right cells
-        if (C == 0){
-            if (grid[R][C+1] == 1){
-                Neighbours++ ;
-            }
-            if (R > 0){
-                if (grid[R-1][C+1] == 1){
-                    Neighbours++ ;
-                }
-            }
-            if (R < (Rows-1)){
-                if (grid[R+1][C+1] == 1){
-                    Neighbours++ ;
-                }
-                }
+        if (grid[R+1][C] == 1) {
+            Neighbours++ ;
         }
-        if (C == (Cols-1)){
-               if (grid[R][C-1] == 1){
-               Neighbours++ ;
-           }
-           if (R>0){
-               if (grid[R-1][C-1] == 1){
-                    Neighbours++ ;
-               }
-           }
-           if (R < (Rows-1)){
-               if (grid[R+1][C-1] == 1){
-                   Neighbours++ ;
-               }
-           }
+        if (grid[R+1][C+1] == 1){
+            Neighbours++ ;
         }
-       
-       
-        //left and right cells when in grid
-        if (C > 0 && C < (Cols-1)){
-                if (grid[R][C-1] == 1){
-                Neighbours++ ;
-            }
-                if (grid[R][C+1] == 1){
-                Neighbours++ ;
-            }
+        if (grid[R][C+1] == 1){
+            Neighbours++ ;
         }
-        //up and down cells when in grid
-        if (R > 0 && R < (Rows-1)){
-                if (grid[R-1][C] == 1){
-                Neighbours++ ;
-            }
-                if (grid[R+1][C] == 1){
-                Neighbours++ ;
-            }
+        if (grid[R-1][C+1] == 1){
+            Neighbours++ ;
         }
-       
-        //corners when in grid
-        if ((R > 0 && R < (Rows-1)) && (C > 0 && C < (Cols-1))){
-            if (grid[R+1][C+1] == 1){
-                Neighbours++ ;
-            }
-            if (grid[R-1][C+1] == 1){
-                Neighbours++ ;
-            }
-            if (grid[R-1][C-1] == 1){
-                Neighbours++ ;
-            }
-            if (grid[R+1][C-1] == 1){
-                Neighbours++ ;
-            }
+        if (grid[R-1][C] == 1){
+            Neighbours++ ;
         }
+        if (grid[R-1][C-1] == 1){
+            Neighbours++ ;
+        }
+        if (grid[R][C-1] == 1){
+            Neighbours++ ;
+        }
+        if (grid[R+1][C-1] == 1){
+            Neighbours++ ;
+        }
+        //check all surounding cells
        
         System.out.println("Neighbours= "+Neighbours);
            
         return Neighbours;
-       
-        //need to fix what happens at the boundry of array because it is invalid
     }
-   
-    public void applyRules(){
-        for (int R = 0; R < Rows; R++) {
-            for (int C = 0; C < Cols; C++) {
-                Neighbours[R][C] = countNeighbours(R,C);
-               
-            }
-        }
-       
-        for (int R = 0; R < Rows; R++) {
-            for (int C = 0; C < Cols; C++) {
-                if (grid[R][C] == 1){
-                    if (Neighbours[R][C] < 2){
-                        grid[R][C] = 0;
-                    }
-                    if (Neighbours[R][C] > 3){
-                        grid[R][C] = 0;
-                    }
-                   
-                }
-                if (grid[R][C] == 0){
-                    if (Neighbours[R][C] == 3){
-                        grid[R][C] = 1;
-                    }
-                }
-            }
-        }
-        //done ini two loops to prevent it changing while still going through the grid
-        repaint();
-    }
-   
-   
    
     public void paint (Graphics g) {
         super.paint(g);
@@ -272,7 +164,6 @@ public class ConwaysGameOfLife4 extends JFrame implements ActionListener,MouseLi
        
             if (e.getSource()==advanceTurn){
             System.out.println("advance a turn");
-            applyRules();
         }
        
     }
