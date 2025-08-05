@@ -1,10 +1,16 @@
 #BlueJ class context
-comment0.target=ConwaysGameOfLife5
+comment0.target=ConwaysGameOfLife6
 comment1.params=
-comment1.target=ConwaysGameOfLife5()
+comment1.target=ConwaysGameOfLife6()
 comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ ConwaysGameOfLife\r\n
-comment2.params=R\ C
-comment2.target=int\ countNeighbours(int,\ int)
+comment10.params=rounds
+comment10.target=void\ autoTurns(int)
+comment11.params=e
+comment11.target=void\ actionPerformed(java.awt.event.ActionEvent)
+comment12.params=R\ C
+comment12.target=int\ countNeighbours(int,\ int)
+comment2.params=
+comment2.target=void\ applyRules()
 comment3.params=g
 comment3.target=void\ paint(java.awt.Graphics)
 comment4.params=e
@@ -19,4 +25,4 @@ comment8.params=e
 comment8.target=void\ mousePressed(java.awt.event.MouseEvent)
 comment9.params=e
 comment9.target=void\ mouseClicked(java.awt.event.MouseEvent)
-numComments=10
+numComments=13

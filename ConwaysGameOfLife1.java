@@ -10,8 +10,8 @@ import java.awt.*;       //for GUI
 import java.awt.event.*; //for GUI
 import java.awt.geom.*; //geometry for lines and shapes
 import javax.swing.JButton;//for buttons
-
-public class ConwaysGameOfLife5 extends JFrame implements ActionListener,MouseListener
+import javax.swing.Timer; //timer for a delay between animations?
+public class ConwaysGameOfLife6 extends JFrame implements ActionListener,MouseListener
 {
     int windowX = 1000;
     int windowY = 800;
@@ -23,6 +23,9 @@ public class ConwaysGameOfLife5 extends JFrame implements ActionListener,MouseLi
     int Cols = 30;
     int cellSize = 25;
     int[][] grid = new int[Rows][Cols];
+    int[][] Neighbours = new int [Rows][Cols];
+   
+    int advanceTurns = 0;
    
     int cellX;
     int cellY;
@@ -30,10 +33,15 @@ public class ConwaysGameOfLife5 extends JFrame implements ActionListener,MouseLi
     JButton quitButton;
     JButton clearButton;
     JButton advanceTurn;
+    JButton advanceSomeTurns;
+    JButton increaseTurn;
+    JButton decreaseTurn;
+    Timer timer;
+    JButton stopButton;
     /**
      * Constructor for objects of class ConwaysGameOfLife
      */
-    public ConwaysGameOfLife5()
+    public ConwaysGameOfLife6()
     {
         this.setLayout(null);
         quitButton = new JButton();
@@ -57,6 +65,35 @@ public class ConwaysGameOfLife5 extends JFrame implements ActionListener,MouseLi
         advanceTurn.addActionListener(this);
         this.add(advanceTurn);
        
+        advanceSomeTurns = new JButton();
+        advanceSomeTurns.setText("Advance "+advanceTurns+" Turns");
+        advanceSomeTurns.setBounds (790,330,140,50);
+        advanceSomeTurns.setFocusable(false);
+        advanceSomeTurns.addActionListener(this);
+        this.add(advanceSomeTurns);
+       
+        increaseTurn = new JButton();
+        increaseTurn.setText("+");
+        increaseTurn.setBounds (940,330,45,23);
+        increaseTurn.setFocusable(false);
+        increaseTurn.addActionListener(this);
+        this.add(increaseTurn);
+       
+        decreaseTurn = new JButton();
+        decreaseTurn.setText("-");
+        decreaseTurn.setBounds (940,357,45,23);
+        decreaseTurn.setFocusable(false);
+        decreaseTurn.addActionListener(this);
+        this.add(decreaseTurn);
+       
+        stopButton = new JButton();
+        stopButton.setText("Stop");
+        stopButton.setBounds(830, 390, 100, 50);
+        stopButton.setFocusable(false);
+        stopButton.addActionListener(this);
+        this.add(stopButton);
+               
+       
         //set title of the window
         setTitle("Conways Game Of Life");
         //window dimentions when open.
@@ -78,52 +115,49 @@ public class ConwaysGameOfLife5 extends JFrame implements ActionListener,MouseLi
 
     }
    
-    public int countNeighbours(int R, int C){
-        int Neighbours = 0;
+   
+    public void applyRules(){
+        for (int R = 0; R < Rows; R++) {
+            for (int C = 0; C < Cols; C++) {
+                Neighbours[R][C] = countNeighbours(R,C);
+               
+            }
+        }
        
-        if (grid[R+1][C] == 1) {
-            Neighbours++ ;
+        for (int R = 0; R < Rows; R++) {
+            for (int C = 0; C < Cols; C++) {
+                if (grid[R][C] == 1){
+                    if (Neighbours[R][C] < 2){
+                        grid[R][C] = 0;
+                    }
+                    if (Neighbours[R][C] > 3){
+                        grid[R][C] = 0;
+                    }
+                   
+                }
+                if (grid[R][C] == 0){
+                    if (Neighbours[R][C] == 3){
+                        grid[R][C] = 1;
+                    }
+                }
+            }
         }
-        if (grid[R+1][C+1] == 1){
-            Neighbours++ ;
-        }
-        if (grid[R][C+1] == 1){
-            Neighbours++ ;
-        }
-        if (grid[R-1][C+1] == 1){
-            Neighbours++ ;
-        }
-        if (grid[R-1][C] == 1){
-            Neighbours++ ;
-        }
-        if (grid[R-1][C-1] == 1){
-            Neighbours++ ;
-        }
-        if (grid[R][C-1] == 1){
-            Neighbours++ ;
-        }
-        if (grid[R+1][C-1] == 1){
-            Neighbours++ ;
-        }
-        //check all surounding cells
-       
-        System.out.println("Neighbours= "+Neighbours);
-           
-        return Neighbours;
+        //done ini two loops to prevent it changing while still going through the grid
+        repaint();
     }
+   
+   
    
     public void paint (Graphics g) {
         super.paint(g);
 
        
         Graphics2D g2 = (Graphics2D) g; // set up to draw.
-
        
         // Draw grid background
         g.setColor(Color.WHITE);
         g.fillRect(xMargin, yMargin, Cols * cellSize, Rows * cellSize);
 
-       
         // Draw cells
         for (int R = 0; R < Rows; R++) {
             for (int C = 0; C < Cols; C++) {
@@ -164,10 +198,29 @@ public class ConwaysGameOfLife5 extends JFrame implements ActionListener,MouseLi
        
             if (e.getSource()==advanceTurn){
             System.out.println("advance a turn");
+            applyRules();
         }
        
+            if (e.getSource()==increaseTurn){
+            advanceTurns = advanceTurns + 1;
+            advanceSomeTurns.setText("Advance "+advanceTurns+" Turns");
+        }
+            if (e.getSource()==decreaseTurn){
+            if (advanceTurns>0){
+                advanceTurns = advanceTurns - 1;
+            }  
+            advanceSomeTurns.setText("Advance "+advanceTurns+" Turns");
+        }
+            if (e.getSource()==advanceSomeTurns){
+            autoTurns(advanceTurns);
+        }
+        if (e.getSource() == stopButton) {
+            if (timer != null && timer.isRunning()) {
+                timer.stop();
+                System.out.println("Timer stopped");
+            }
+        }  
     }
-   
     public void mouseExited(MouseEvent e) {System.out.println("exit");}
     public void mouseEntered(MouseEvent e) {System.out.println("enter");}
     public void mouseReleased(MouseEvent e) {System.out.println("release");}
@@ -199,6 +252,140 @@ public class ConwaysGameOfLife5 extends JFrame implements ActionListener,MouseLi
         countNeighbours(cellX,cellY);
     }
    
+    public void autoTurns(int rounds){
+        if (timer != null && timer.isRunning()) {
+            timer.stop();
+        }
+       
+       
+        final int[] count = {0};  // counter wrapped in array to modify inside inner class
+
+        timer = new Timer(300, new ActionListener() {
+           
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (count[0] < rounds) {
+                    applyRules();  // advance one generation
+                    count[0]++;
+                } else {
+                    timer.stop();  // stop timer after completing all rounds
+                }
+            }
+        });
+
+        timer.start();  // start the timer to begin simulation
+    }
+       
+   
+   
+    public int countNeighbours(int R, int C){
+        int Neighbours = 0;
+        //top and bottom cells and the corners of them
+        if (R == 0){
+                if (grid[R+1][C] == 1) {
+                Neighbours++ ;
+            }
+            if (C>0 && C < (Cols-1)){
+                if (grid[R+1][C-1] == 1){
+                    Neighbours++ ;
+                }
+            }
+            if (C < (Cols-1) && C>0){
+                if (grid[R+1][C+1] == 1){
+                    Neighbours++ ;
+                }
+            }
+        }
+        if (R == (Rows-1)){
+                if (grid[R-1][C] == 1){
+                Neighbours++ ;
+            }
+            if (C>0 && C < (Cols-1)){
+                if (grid[R-1][C-1] == 1){
+                    Neighbours++ ;
+                }
+            }
+            if (C < (Cols-1) && C>0){
+                if (grid[R-1][C+1] == 1){
+                    Neighbours++ ;
+                }
+            }
+        }
+       
+        //far left and far right cells
+        if (C == 0){
+            if (grid[R][C+1] == 1){
+                Neighbours++ ;
+            }
+            if (R > 0){
+                if (grid[R-1][C+1] == 1){
+                    Neighbours++ ;
+                }
+            }
+            if (R < (Rows-1)){
+                if (grid[R+1][C+1] == 1){
+                    Neighbours++ ;
+                }
+                }
+        }
+        if (C == (Cols-1)){
+               if (grid[R][C-1] == 1){
+               Neighbours++ ;
+           }
+           if (R>0){
+               if (grid[R-1][C-1] == 1){
+                    Neighbours++ ;
+               }
+           }
+           if (R < (Rows-1)){
+               if (grid[R+1][C-1] == 1){
+                   Neighbours++ ;
+               }
+           }
+        }
+       
+       
+        //left and right cells when in grid
+        if (C > 0 && C < (Cols-1)){
+                if (grid[R][C-1] == 1){
+                Neighbours++ ;
+            }
+                if (grid[R][C+1] == 1){
+                Neighbours++ ;
+            }
+        }
+        //up and down cells when in grid
+        if (R > 0 && R < (Rows-1)){
+                if (grid[R-1][C] == 1){
+                Neighbours++ ;
+            }
+                if (grid[R+1][C] == 1){
+                Neighbours++ ;
+            }
+        }
+       
+        //corners when in grid
+        if ((R > 0 && R < (Rows-1)) && (C > 0 && C < (Cols-1))){
+            if (grid[R+1][C+1] == 1){
+                Neighbours++ ;
+            }
+            if (grid[R-1][C+1] == 1){
+                Neighbours++ ;
+            }
+            if (grid[R-1][C-1] == 1){
+                Neighbours++ ;
+            }
+            if (grid[R+1][C-1] == 1){
+                Neighbours++ ;
+            }
+        }
+       
+        System.out.println("Neighbours= "+Neighbours);
+           
+        return Neighbours;
+       
+        //need to fix what happens at the boundry of array because it is invalid
+    }
    
 
 }
